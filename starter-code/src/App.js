@@ -9,6 +9,25 @@ state = {
   search: ''
 }
 
+handleChange = event => {
+  console.log(event.target.value)
+  const searchVal = event.target.value;
+
+  function capitalise(string){
+    return string.charAt(0).toUpperCase() + string.slice(1)
+  }
+
+  this.setState((state, props) =>({
+    search: capitalise(searchVal),
+    ironhackersList: this.state.ironhackersList.filter((ironhacker) => {
+    if (ironhacker.firstName.includes(searchVal) || ironhacker.lastName.includes(searchVal))
+    {
+      return ironhacker
+    }
+    })
+  }))
+}
+
   render() {
     
 const displayIronhackers = this.state.ironhackersList.map((ironhacker) => {
@@ -25,7 +44,14 @@ const displayIronhackers = this.state.ironhackersList.map((ironhacker) => {
     return (
       <div>
       <form>
-      <label htmlFor
+          <label htmlFor="search">Searchbar</label>
+          <input
+            type="text"
+            name="search"
+            id="search"
+            value={this.state.search}
+            onChange={this.handleChange}
+          />
       </form>
       
       <table>
