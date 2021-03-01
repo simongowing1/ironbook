@@ -5,38 +5,45 @@ import users from "./users";
 class App extends React.Component {
 
 state = {
-  ironhackersList: users,
   search: ''
 }
 
 handleChange = event => {
   console.log(event.target.value)
-  const searchVal = event.target.value;
-
-  function capitalise(string){
-    return string.charAt(0).toUpperCase() + string.slice(1)
-  }
+  let searchVal = event.target.value.toLowerCase();
 
   this.setState((state, props) =>({
-    search: capitalise(searchVal),
-    ironhackersList: this.state.ironhackersList.filter((ironhacker) => {
-    if (ironhacker.firstName.includes(searchVal) || ironhacker.lastName.includes(searchVal))
-    {
-      return ironhacker
-    }
-    })
+    search: searchVal,
   }))
 }
 
   render() {
+
+const filteredUsers = users.filter((ironhacker) => {
+    if (ironhacker.firstName.toLowerCase().includes(this.state.search) 
+      || ironhacker.lastName.includes(this.state.search))
+      {
+        return ironhacker
+      }
+      })
     
-const displayIronhackers = this.state.ironhackersList.map((ironhacker) => {
+const displayIronhackers = filteredUsers.map((ironhacker) => {
+  let linkedinImage;
+  let superLink; 
+  if (ironhacker.linkedin) {
+    superLink = ironhacker.linkedin
+    linkedinImage = 'linkedin.png'
+  } else {
+    superLink = ''
+  }
+  
   return(
   <tr>
     <td>{ironhacker.firstName}</td>
     <td>{ironhacker.lastName}</td>
     <td>{ironhacker.campus}</td>
     <td>{ironhacker.role}</td>
+    <td><a href= {superLink}><img src={linkedinImage}></img></a></td>
   </tr>
   )
 })
@@ -60,6 +67,7 @@ const displayIronhackers = this.state.ironhackersList.map((ironhacker) => {
         <th>Last name</th>
         <th>Campus</th>
         <th>Role</th>
+        <th>LinkedIn</th>
         </tr>
       {displayIronhackers}
       </table>  
